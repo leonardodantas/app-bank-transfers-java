@@ -17,16 +17,19 @@ public class CreateUser implements ICreateUser {
 
     @Override
     public User execute(final User user) {
-        userRepository.findByDocument(user.getDocumentOnlyNumbers())
-                .ifPresent((exists) -> {
-                    throw new AlreadyUserException(String.format("Document %s already exist", exists.getDocument()));
-                });
-
-        userRepository.findByEmail(user.getEmail())
-                .ifPresent((exists) -> {
-                    throw new AlreadyUserException(String.format("Email %s already exist", exists.getEmail()));
-                });
-
+        validateUserAlreadyExists(user);
         return userRepository.save(user);
+    }
+
+    private void validateUserAlreadyExists(final User user) {
+        userRepository.findByDocument(user.documentOnlyNumbers())
+                .ifPresent((exists) -> {
+                    throw new AlreadyUserException(String.format("Document %s already exist", exists.document()));
+                });
+
+        userRepository.findByEmail(user.email())
+                .ifPresent((exists) -> {
+                    throw new AlreadyUserException(String.format("Email %s already exist", exists.email()));
+                });
     }
 }

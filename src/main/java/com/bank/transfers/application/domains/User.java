@@ -1,30 +1,8 @@
 package com.bank.transfers.application.domains;
 
-public class User {
+public record User(String nameComplete, String document, String email, String password) {
 
-    private final String nameComplete;
-    private final String document;
-    private final String email;
-
-    private final String password;
-
-    public User(final String nameComplete, final String document, final String email, final String password) {
-        this.nameComplete = nameComplete;
-        this.document = document;
-        this.email = email;
-        this.password = password;
-    }
-
-
-    public String getDocumentOnlyNumbers() {
+    public String documentOnlyNumbers() {
         return document;
-    }
-
-    public String getDocument() {
-        return document;
-    }
-
-    public String getEmail() {
-        return email;
     }
 }
