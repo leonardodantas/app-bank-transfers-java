@@ -1,0 +1,10 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+application:
+  swagger:
+    title: @name@
+    description: @description@
+    version: @version@
