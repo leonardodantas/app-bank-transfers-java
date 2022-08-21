@@ -1,5 +1,10 @@
 package com.bank.transfers.application.app.usecases;
 
+import com.bank.transfers.application.app.exceptions.AlreadyUserException;
+import com.bank.transfers.application.app.repositories.IUserRepository;
+import com.bank.transfers.application.app.usecases.impl.CreateUser;
+import com.bank.transfers.application.http.converters.UserConverter;
+import com.bank.transfers.application.http.requests.UserRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,44 +21,41 @@ import static org.mockito.Mockito.*;
 public class CreateUserTest {
 
     @InjectMocks
-    private CreateUserUsecase createUser;
+    private CreateUser createUser;
 
     @Mock
     private IUserRepository userRepository;
 
     @Test
-    public void createUser(){
-        final UserRequest request = new UserRequest("Leonardo Dantas", "312.778.123-09", "user@email.com", "123456");
-        final var result = createUser.execute(UserRequest.toDomain(request));
+    public void createUser() {
+        final var request = new UserRequest("Leonardo Dantas", "312.778.123-09", "user@email.com", "123456");
+
+        when(userRepository.save(any()))
+                .thenReturn(UserConverter.toDomain(request));
+
+        final var result = createUser.execute(UserConverter.toDomain(request));
 
         assertThat(result).isNotNull();
         verify(userRepository, times(1)).save(any());
     }
 
     @Test(expected = AlreadyUserException.class)
-    public void alreadyExistUserWithEmail(){
-
-        final UserRequest request = new UserRequest("Leonardo Dantas", "312.778.123-09", "user@email.com", "123456");
-        final User user = UserConverter.toDomain(request);
+    public void alreadyExistUserWithEmail() {
+        final var request = new UserRequest("Leonardo Dantas", "312.778.123-09", "user@email.com", "123456");
 
         when(userRepository.findByEmail(anyString()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(UserConverter.toDomain(request)));
 
         createUser.execute(UserConverter.toDomain(request));
-
     }
 
-
     @Test(expected = AlreadyUserException.class)
-    public void alreadyExistUserWithDocumentation(){
-        final UserRequest request = new UserRequest("Leonardo Dantas", "312.778.123-09", "user@email.com", "123456");
-
-        final User user = UserConverter.toDomain(request);
+    public void alreadyExistUserWithDocumentation() {
+        final var request = new UserRequest("Leonardo Dantas", "312.778.123-09", "user@email.com", "123456");
 
         when(userRepository.findByDocument(anyString()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(UserConverter.toDomain(request)));
 
-        final var result = createUser.execute(UserRequest.toDomain(request));
-
+        createUser.execute(UserConverter.toDomain(request));
     }
 }
