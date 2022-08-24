@@ -1,7 +1,7 @@
-package com.bank.transfers.application.http.converters;
+package com.bank.transfers.application.infra.http.converters;
 
 import com.bank.transfers.application.domains.User;
-import com.bank.transfers.application.http.requests.UserRequest;
+import com.bank.transfers.application.infra.http.requests.UserRequest;
 
 public class UserConverter {
     public static User toDomain(final UserRequest json) {
