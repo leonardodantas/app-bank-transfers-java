@@ -1,4 +1,4 @@
-package com.bank.transfers.application.config;
+package com.bank.transfers.application.config.swagger;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
