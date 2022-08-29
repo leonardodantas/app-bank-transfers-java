@@ -3,6 +3,7 @@ package com.bank.transfers.application.app.repositories;
 import com.bank.transfers.application.domains.User;
 
 import java.util.Map;
+
 import java.util.Optional;
 
 public interface IUserRepository {
@@ -13,4 +14,5 @@ public interface IUserRepository {
     Optional<User> findByDocument(final String document);
 
     Optional<User> findById(final String userId);
+
 }
