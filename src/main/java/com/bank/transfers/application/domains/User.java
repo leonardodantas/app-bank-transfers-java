@@ -7,16 +7,13 @@ public record User(String id, String nameComplete, String document, String email
         return document;
     }
 
-
+    public User updatePassword(final String passwordEncode) {
         return new User(this.id, this.nameComplete, this.document, this.email, passwordEncode);
     }
 
     public User cleanPassword() {
         return new User(this.id, this.nameComplete, this.document, this.email, "");
-
     }
 
-    public User cleanPassword(){
-        return new User(this.nameComplete, this.document, this.email, "");
-    }
+
 }
