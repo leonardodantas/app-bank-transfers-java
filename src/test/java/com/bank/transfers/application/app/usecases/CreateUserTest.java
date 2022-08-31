@@ -4,17 +4,12 @@ import com.bank.transfers.application.app.exceptions.AlreadyUserException;
 import com.bank.transfers.application.app.repositories.IUserRepository;
 import com.bank.transfers.application.app.usecases.impl.CreateUser;
 
-import com.bank.transfers.application.http.converters.UserConverter;
-import com.bank.transfers.application.http.requests.UserRequest;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import com.bank.transfers.application.domains.User;
-
-import com.bank.transfers.application.domains.User;
 import com.bank.transfers.application.infra.http.converters.UserConverter;
 import com.bank.transfers.application.infra.http.requests.UserRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import com.bank.transfers.application.domains.User;
+
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
