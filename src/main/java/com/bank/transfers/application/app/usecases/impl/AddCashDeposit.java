@@ -36,7 +36,7 @@ public class AddCashDeposit implements IAddCashDeposit {
     }
 
     private CashDeposit saveCashDeposit(final User user, final Account account, final BigDecimal value) {
-        final var cashDeposit = CashDeposit.of(value, user);
+        final var cashDeposit = CashDeposit.of(user,value);
         final var accountToSave = account.of(cashDeposit);
         this.accountRepository.save(accountToSave);
         return cashDeposit;

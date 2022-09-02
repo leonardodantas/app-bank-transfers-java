@@ -6,10 +6,7 @@ import com.bank.transfers.application.app.repositories.IAccountRepository;
 import com.bank.transfers.application.app.repositories.ICashDepositRepository;
 import com.bank.transfers.application.app.security.IGetUserToken;
 import com.bank.transfers.application.app.usecases.impl.AddCashDeposit;
-import com.bank.transfers.application.domains.Account;
-import com.bank.transfers.application.domains.CashDeposit;
-import com.bank.transfers.application.domains.CashWithdrawal;
-import com.bank.transfers.application.domains.User;
+import com.bank.transfers.application.domains.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -54,12 +51,12 @@ public class AddCashDepositTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
-        final var cashDepositSave = CashDeposit.of(value, user);
+        final var cashDepositSave = CashDeposit.of(user, value);
 
         when(cashDepositRepository.save(any()))
                 .thenReturn(Optional.of(cashDepositSave));
 
-        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, List.of(cashDepositSave), List.of(), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
+        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, BankTransactions.of(cashDepositSave), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
         when(accountRepository.findByUserId(any()))
                 .thenReturn(Optional.of(account));
 
@@ -79,12 +76,12 @@ public class AddCashDepositTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
-        final var cashDepositSave = CashDeposit.of(value, user);
+        final var cashDepositSave = CashDeposit.of(user, value);
 
         when(cashDepositRepository.save(any()))
                 .thenReturn(Optional.of(cashDepositSave));
 
-        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, List.of(), List.of(), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
+        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, new BankTransactions(List.of(), List.of()), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
         when(accountRepository.findByUserId(any()))
                 .thenReturn(Optional.of(account));
 
@@ -108,12 +105,12 @@ public class AddCashDepositTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
-        final var cashDepositSave = CashDeposit.of(value, user);
+        final var cashDepositSave = CashDeposit.of(user, value);
 
         when(cashDepositRepository.save(any()))
                 .thenReturn(Optional.of(cashDepositSave));
 
-        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, List.of(cashDepositSave), List.of(), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
+        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, BankTransactions.of(cashDepositSave), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
         when(accountRepository.findByUserId(any()))
                 .thenReturn(Optional.of(account));
 
@@ -136,9 +133,9 @@ public class AddCashDepositTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
-        final var cashDepositSave = CashDeposit.of(value, user);
+        final var cashDepositSave = CashDeposit.of(user, value);
 
-        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), false, List.of(cashDepositSave), List.of(), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
+        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), false, BankTransactions.of(cashDepositSave), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
         when(accountRepository.findByUserId(any()))
                 .thenReturn(Optional.of(account));
 
@@ -169,12 +166,12 @@ public class AddCashDepositTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
-        final var cashDepositSave = CashDeposit.of(value, user);
+        final var cashDepositSave = CashDeposit.of(user, value);
 
         when(cashDepositRepository.save(any()))
                 .thenReturn(Optional.of(cashDepositSave));
 
-        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, List.of(cashDepositSave), List.of(), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
+        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, BankTransactions.of(cashDepositSave), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
         when(accountRepository.findByUserId(any()))
                 .thenReturn(Optional.of(account));
 
@@ -195,14 +192,14 @@ public class AddCashDepositTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
-        final var cashDepositSave = CashDeposit.of(value, user);
+        final var cashDepositSave = CashDeposit.of(user, value);
 
         when(cashDepositRepository.save(any()))
                 .thenReturn(Optional.of(cashDepositSave));
 
         final var cashWithdrawal = CashWithdrawal.of(BigDecimal.valueOf(50), user);
 
-        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, List.of(cashDepositSave), List.of(cashWithdrawal), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
+        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, BankTransactions.of(cashDepositSave, cashWithdrawal), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
         when(accountRepository.findByUserId(any()))
                 .thenReturn(Optional.of(account));
 
@@ -223,14 +220,14 @@ public class AddCashDepositTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
-        final var cashDepositSave = CashDeposit.of(value, user);
+        final var cashDepositSave = CashDeposit.of(user, value);
 
         when(cashDepositRepository.save(any()))
                 .thenReturn(Optional.of(cashDepositSave));
 
-        final var cashWithdrawal = CashWithdrawal.of(BigDecimal.valueOf(50), user);
+        final var cashWithdrawal = CashWithdrawal.of(BigDecimal.valueOf(100), user);
 
-        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, List.of(cashDepositSave), List.of(cashWithdrawal, cashWithdrawal), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
+        final var account = new Account("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), true, BankTransactions.of(List.of(cashDepositSave), List.of(cashWithdrawal)), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
         when(accountRepository.findByUserId(any()))
                 .thenReturn(Optional.of(account));
 
