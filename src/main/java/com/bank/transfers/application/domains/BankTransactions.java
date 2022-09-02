@@ -19,6 +19,10 @@ public record BankTransactions(
         return new BankTransactions(cashDeposit, cashWithdrawal);
     }
 
+    public static BankTransactions empty() {
+        return new BankTransactions(List.of(), List.of());
+    }
+
     public BankTransactions of(Collection<CashDeposit> cashDeposits) {
         return new BankTransactions(cashDeposits, this.cashWithdrawal);
     }

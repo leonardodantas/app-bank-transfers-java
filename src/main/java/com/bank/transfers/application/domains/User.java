@@ -3,6 +3,10 @@ package com.bank.transfers.application.domains;
 
 public record User(String id, String nameComplete, String document, String email, String password) {
 
+    public static User of(final String id, final String name, final String document, final String email, final String password) {
+        return new User(id, name, document, email, password);
+    }
+
     public String documentOnlyNumbers() {
         return document;
     }

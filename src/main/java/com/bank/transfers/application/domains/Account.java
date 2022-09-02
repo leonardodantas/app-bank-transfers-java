@@ -20,6 +20,10 @@ public record Account(
 
 ) {
 
+    public static Account of(final String id, final String userId, final String account, final String number, final LocalDateTime openingDate, final LocalDateTime closingDate, final LocalDateTime fistDeposit, final LocalDateTime lastDeposit) {
+        return new Account(id, userId, account, number, openingDate, closingDate, true, BankTransactions.empty(), fistDeposit, lastDeposit);
+    }
+
     public Account of(final CashDeposit cashDeposit) {
         final var cashDeposits = Stream.concat(this.bankTransactions().cashDeposits().stream(), Stream.of(cashDeposit)).toList();
         final var fistDeposit = getFistDeposit(cashDeposits);
@@ -41,5 +45,17 @@ public record Account(
 
     public Collection<CashDeposit> cashDeposits() {
         return this.bankTransactions().cashDeposits();
+    }
+
+    public Account withDeposit(final CashDeposit cashDeposit) {
+        return new Account(this.id, this.userId, this.account, this.number, this.openingDate, this.closingDate, this.active, BankTransactions.of(cashDeposit), fistDeposit, LocalDateTime.now());
+    }
+
+    public Account disable() {
+        return new Account(this.id, this.userId, this.account, this.number, this.openingDate, this.closingDate, false, this.bankTransactions, fistDeposit, LocalDateTime.now());
+    }
+
+    public Account withBankTransactions(final BankTransactions bankTransactions) {
+        return new Account(this.id, this.userId, this.account, this.number, this.openingDate, this.closingDate, this.active, bankTransactions, fistDeposit, LocalDateTime.now());
     }
 }
