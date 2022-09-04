@@ -28,7 +28,7 @@ public class AddCashDeposit implements IAddCashDeposit {
     }
 
     @Override
-    public Optional<CashDeposit> execute(final BigDecimal value) {
+    public CashDeposit execute(final BigDecimal value) {
         final var user = this.getUserToken.execute();
         final var account = this.getAccount(user);
         final var cashDeposit = this.saveCashDeposit(user, account, value);
