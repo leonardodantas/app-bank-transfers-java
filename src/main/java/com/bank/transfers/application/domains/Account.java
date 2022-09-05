@@ -17,7 +17,6 @@ public record Account(
         BankTransactions bankTransactions,
         LocalDateTime fistDeposit,
         LocalDateTime lastDeposit
-
 ) {
 
     public static Account of(final String id, final String userId, final String account, final String number, final LocalDateTime openingDate, final LocalDateTime closingDate, final LocalDateTime fistDeposit, final LocalDateTime lastDeposit) {
