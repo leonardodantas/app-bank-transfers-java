@@ -57,4 +57,8 @@ public record Account(
     public Account withBankTransactions(final BankTransactions bankTransactions) {
         return new Account(this.id, this.userId, this.account, this.number, this.openingDate, this.closingDate, this.active, bankTransactions, fistDeposit, LocalDateTime.now());
     }
+
+    public Account withWithdrawal(final CashWithdrawal cashWithdrawal) {
+        return new Account(this.id, this.userId, this.account, this.number, this.openingDate, this.closingDate, this.active, this.bankTransactions.withWithdrawal(cashWithdrawal), fistDeposit, LocalDateTime.now());
+    }
 }

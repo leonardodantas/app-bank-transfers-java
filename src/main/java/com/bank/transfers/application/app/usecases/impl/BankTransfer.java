@@ -8,6 +8,7 @@ import com.bank.transfers.application.app.repositories.ITransferRepository;
 import com.bank.transfers.application.app.security.IGetUserToken;
 import com.bank.transfers.application.app.usecases.IBankTransfer;
 import com.bank.transfers.application.domains.Account;
+import com.bank.transfers.application.domains.CashWithdrawal;
 import com.bank.transfers.application.domains.Transfer;
 import com.bank.transfers.application.domains.User;
 import org.springframework.stereotype.Service;
@@ -33,13 +34,14 @@ public class BankTransfer implements IBankTransfer {
         final var account = getAccount(user);
         validateTransfer(user);
         validateBalance(transfer, account);
-        return saveAndSendMessage(transfer, account);
+        final var cashWithdrawal = CashWithdrawal.of(user, transfer.value());
+        return saveAndSendMessage(transfer, account.withWithdrawal(cashWithdrawal));
     }
 
     private Transfer saveAndSendMessage(final Transfer transfer, final Account account) {
-        final var transferSave = bankTransferRepository.save(transfer.withAccount(account));
         sendBankTransferMessage.execute(transfer);
-        return transferSave;
+        this.accountRepository.save(account);
+        return bankTransferRepository.save(transfer.withAccount(account));
     }
 
     private Account getAccount(final User user) {

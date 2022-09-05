@@ -8,7 +8,7 @@ public record CashWithdrawal(
         BigDecimal value,
         LocalDateTime create) {
 
-    public static CashWithdrawal of(final BigDecimal value, final User user) {
+    public static CashWithdrawal of(final User user, final BigDecimal value) {
         return new CashWithdrawal(user.id(), value, LocalDateTime.now());
     }
 }

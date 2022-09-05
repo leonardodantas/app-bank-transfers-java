@@ -2,6 +2,7 @@ package com.bank.transfers.application.domains;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 public record BankTransactions(
         Collection<CashDeposit> cashDeposits,
@@ -29,5 +30,10 @@ public record BankTransactions(
 
     public BankTransactions of(Collection<CashDeposit> cashDeposits) {
         return new BankTransactions(cashDeposits, this.cashWithdrawal);
+    }
+
+    public BankTransactions withWithdrawal(final CashWithdrawal cashWithdrawal) {
+        final var cashWithdrawals = Stream.concat(this.cashWithdrawal.stream(), Stream.of(cashWithdrawal)).toList();
+        return new BankTransactions(cashDeposits, cashWithdrawals);
     }
 }
