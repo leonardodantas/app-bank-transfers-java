@@ -4,7 +4,7 @@ import com.bank.transfers.application.app.exceptions.LogisticsTransferException;
 import com.bank.transfers.application.app.exceptions.WithoutBalanceException;
 import com.bank.transfers.application.app.messages.ISendBankTransferMessage;
 import com.bank.transfers.application.app.repositories.IAccountRepository;
-import com.bank.transfers.application.app.repositories.IBankTransferRepository;
+import com.bank.transfers.application.app.repositories.ITransferRepository;
 import com.bank.transfers.application.app.security.IGetUserToken;
 import com.bank.transfers.application.app.usecases.IBankTransfer;
 import com.bank.transfers.application.domains.Account;
@@ -17,10 +17,10 @@ public class BankTransfer implements IBankTransfer {
 
     private final IGetUserToken getUserToken;
     private final IAccountRepository accountRepository;
-    private final IBankTransferRepository bankTransferRepository;
+    private final ITransferRepository bankTransferRepository;
     private final ISendBankTransferMessage sendBankTransferMessage;
 
-    public BankTransfer(final IGetUserToken getUserToken, final IAccountRepository accountRepository, final IBankTransferRepository bankTransferRepository, final ISendBankTransferMessage sendBankTransferMessage) {
+    public BankTransfer(final IGetUserToken getUserToken, final IAccountRepository accountRepository, final ITransferRepository bankTransferRepository, final ISendBankTransferMessage sendBankTransferMessage) {
         this.getUserToken = getUserToken;
         this.accountRepository = accountRepository;
         this.bankTransferRepository = bankTransferRepository;
