@@ -5,7 +5,7 @@ import com.bank.transfers.application.app.exceptions.LogisticsTransferException;
 import com.bank.transfers.application.app.exceptions.WithoutBalanceException;
 import com.bank.transfers.application.app.messages.ISendBankTransferMessage;
 import com.bank.transfers.application.app.repositories.IAccountRepository;
-import com.bank.transfers.application.app.repositories.IBankTransferRepository;
+import com.bank.transfers.application.app.repositories.ITransferRepository;
 import com.bank.transfers.application.app.security.IGetUserToken;
 import com.bank.transfers.application.app.usecases.impl.BankTransfer;
 import com.bank.transfers.application.domains.Account;
@@ -39,7 +39,7 @@ public class BankTransferTest {
     private IAccountRepository accountRepository;
 
     @Mock
-    private IBankTransferRepository bankTransferRepository;
+    private ITransferRepository bankTransferRepository;
 
     @Mock
     private ISendBankTransferMessage sendBankTransferMessage;
