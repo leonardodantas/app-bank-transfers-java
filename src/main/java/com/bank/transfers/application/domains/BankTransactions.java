@@ -23,6 +23,10 @@ public record BankTransactions(
         return new BankTransactions(List.of(), List.of());
     }
 
+    public static BankTransactions of(final BankTransactions bankTransactions) {
+        return new BankTransactions(bankTransactions.cashDeposits(), bankTransactions.cashWithdrawal());
+    }
+
     public BankTransactions of(Collection<CashDeposit> cashDeposits) {
         return new BankTransactions(cashDeposits, this.cashWithdrawal);
     }
