@@ -16,7 +16,7 @@ public class SpringFox {
     private final String description;
     private final String version;
 
-    public SpringFox(@Value("${application.swagger.title}") final String title, @Value("${application.swagger.description}") final String description, @Value("${application.swagger.version}") final String version) {
+    public SpringFox(@Value("${spring.application.swagger.title}") final String title, @Value("${spring.application.swagger.description}") final String description, @Value("${spring.application.swagger.version}") final String version) {
         this.title = title;
         this.description = description;
         this.version = version;
