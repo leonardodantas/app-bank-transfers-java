@@ -13,7 +13,6 @@ public record UserDocument(
         String documentOnlyNumbers
 ) {
     public static UserDocument from(final User user) {
-        final var documentOnlyNumbers = user.document().replaceAll("\\D", "");
-        return new UserDocument(user.id(), user.nameComplete(), user.document(), user.email(), user.password(), documentOnlyNumbers);
+        return new UserDocument(user.id(), user.nameComplete(), user.document(), user.email(), user.password(), user.documentOnlyNumbers());
     }
 }

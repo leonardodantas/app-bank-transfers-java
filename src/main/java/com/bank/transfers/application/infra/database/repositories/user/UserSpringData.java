@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface UserSpringData extends MongoRepository<UserDocument, String> {
     Optional<UserDocument> findByEmail(final String email);
 
-    Optional<UserDocument> findByDocument(final String document);
+    Optional<UserDocument> findByDocumentOnlyNumbers(final String document);
 }

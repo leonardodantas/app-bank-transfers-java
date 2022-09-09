@@ -31,7 +31,7 @@ public class CreateUser implements ICreateUser {
     }
 
     private void validateUserAlreadyExists(final User user) {
-        userRepository.findByDocument(user.documentOnlyNumbers())
+        userRepository.findByDocumentOnlyNumbers(user.documentOnlyNumbers())
                 .ifPresent((exists) -> {
                     throw new AlreadyUserException(String.format("Document %s already exist", exists.document()));
                 });

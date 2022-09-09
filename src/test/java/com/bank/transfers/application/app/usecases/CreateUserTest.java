@@ -91,7 +91,7 @@ public class CreateUserTest {
     public void alreadyExistUserWithDocumentation() {
         final var request = new UserRequest("Leonardo Dantas", "312.778.123-09", "user@email.com", "123456");
 
-        when(userRepository.findByDocument(anyString()))
+        when(userRepository.findByDocumentOnlyNumbers(anyString()))
                 .thenReturn(Optional.of(UserConverter.toDomain(request)));
 
         createUser.execute(UserConverter.toDomain(request));

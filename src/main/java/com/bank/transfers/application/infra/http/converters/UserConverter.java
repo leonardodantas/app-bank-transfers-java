@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public class UserConverter {
     public static User toDomain(final UserRequest json) {
-        return new User(UUID.randomUUID().toString(), json.nameComplete(), json.document(), json.email(), json.password());
+        final var documentOnlyNumbers = json.document().replaceAll("\\D", "");
+        return new User(UUID.randomUUID().toString(), json.nameComplete(), json.document(), documentOnlyNumbers, json.email(), json.password());
     }
 }

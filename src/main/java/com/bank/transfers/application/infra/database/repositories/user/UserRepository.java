@@ -34,8 +34,8 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public Optional<User> findByDocument(String document) {
-        return userSpringData.findByDocument(document).map(UserDocumentConverter::toDomain);
+    public Optional<User> findByDocumentOnlyNumbers(final String document) {
+        return userSpringData.findByDocumentOnlyNumbers(document).map(UserDocumentConverter::toDomain);
     }
 
     @Override
