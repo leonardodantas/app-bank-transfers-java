@@ -26,7 +26,7 @@ public class SpringFox {
     public Docket documentation() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.br.rank.list.infra.http"))
+                .apis(RequestHandlerSelectors.basePackage("com.bank.transfers.application.infra.http.controllers"))
                 .build()
                 .apiInfo(metaData());
     }
