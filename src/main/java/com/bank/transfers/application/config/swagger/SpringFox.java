@@ -1,13 +1,21 @@
 package com.bank.transfers.application.config.swagger;
 
+import io.swagger.models.auth.In;
+import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+
+import java.util.List;
 
 @Configuration
 public class SpringFox {
@@ -28,7 +36,9 @@ public class SpringFox {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.bank.transfers.application.infra.http.controllers"))
                 .build()
-                .apiInfo(metaData());
+                .apiInfo(metaData())
+                .securityContexts(List.of(securityContext()))
+                .securitySchemes(List.of(apiKey()));
     }
 
     private ApiInfo metaData() {
@@ -41,4 +51,18 @@ public class SpringFox {
                 .build();
     }
 
+    private ApiKey apiKey() {
+        return new ApiKey("JWT", "Authorization", "header");
+    }
+
+    private SecurityContext securityContext() {
+        return SecurityContext.builder().securityReferences(defaultAuth()).build();
+    }
+
+    private List<SecurityReference> defaultAuth() {
+        final var authorizationScope = new AuthorizationScope("global", "accessEverything");
+        final var authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return List.of(new SecurityReference("JWT", authorizationScopes));
+    }
 }

@@ -4,7 +4,6 @@ import com.bank.transfers.application.app.exceptions.UserNotFoundException;
 import com.bank.transfers.application.app.repositories.IUserRepository;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -15,17 +14,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AuthenticatedWithTokenFilter  {
+public class AuthenticatedWithTokenFilter extends OncePerRequestFilter {
 
     private final IUserRepository userRepository;
-    @Value("${jwt.secret}")
-    private String secret;
+    private final String secret;
 
-    public AuthenticatedWithTokenFilter(final IUserRepository userRepository) {
+    public AuthenticatedWithTokenFilter(final IUserRepository userRepository, final String secret) {
         this.userRepository = userRepository;
+        this.secret = secret;
     }
 
-    public void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
 
         final var token = this.getToken(request);
         final var valid = this.isTokenValid(token);
