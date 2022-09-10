@@ -1,7 +1,8 @@
 package com.bank.transfers.application.infra.security;
 
 import com.bank.transfers.application.app.security.IGenerateToken;
-import com.bank.transfers.application.domains.User;
+import com.bank.transfers.application.config.security.AuthenticatedUser;
+import com.bank.transfers.application.domains.Token;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,25 +33,27 @@ public class GenerateToken implements IGenerateToken {
     }
 
     @Override
-    public String execute(final String email, final String password) {
+    public Token execute(final String email, final String password) {
         final var usernamePassword = new UsernamePasswordAuthenticationToken(email, password);
         final var authentication = authManager.authenticate(usernamePassword);
         return getToken(authentication);
     }
 
 
-    public String getToken(final Authentication authentication) {
-        final var logged = (User) authentication.getPrincipal();
-        final var today = new Date();
-        final var expirationDate = new Date(today.getTime() + Long.parseLong(expiration));
+    public Token getToken(final Authentication authentication) {
+        final var logged = (AuthenticatedUser) authentication.getPrincipal();
+        final var createAt = new Date();
+        final var expirationAt = new Date(createAt.getTime() + Long.parseLong(expiration));
 
-        return Jwts.builder()
+        final var token = Jwts.builder()
                 .setIssuer("API User authorization")
                 .claim("password", password)
-                .setSubject(logged.id())
-                .setIssuedAt(today)
-                .setExpiration(expirationDate)
+                .setSubject(logged.getId())
+                .setIssuedAt(createAt)
+                .setExpiration(expirationAt)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+
+        return Token.of(token, createAt, expirationAt);
     }
 }

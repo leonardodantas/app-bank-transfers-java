@@ -1,6 +1,8 @@
 package com.bank.transfers.application.app.security;
 
+import com.bank.transfers.application.domains.Token;
+
 public interface IGenerateToken {
 
-    String execute(final String email, final String password);
+    Token execute(final String email, final String password);
 }

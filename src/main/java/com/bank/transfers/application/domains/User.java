@@ -14,10 +14,6 @@ public record User(
         return new User(id, name, document, documentOnlyNumbers, email, "");
     }
 
-    public User updatePassword(final String passwordEncode) {
-        return new User(this.id, this.nameComplete, this.document, this.documentOnlyNumbers, this.email, passwordEncode);
-    }
-
     public User cleanPassword() {
         return new User(this.id, this.nameComplete, this.document, this.documentOnlyNumbers, this.email, "");
     }

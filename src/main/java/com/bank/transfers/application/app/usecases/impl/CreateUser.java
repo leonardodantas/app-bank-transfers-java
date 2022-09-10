@@ -4,9 +4,8 @@ import com.bank.transfers.application.app.exceptions.AlreadyUserException;
 import com.bank.transfers.application.app.repositories.IUserRepository;
 import com.bank.transfers.application.app.usecases.ICreateUser;
 import com.bank.transfers.application.domains.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Base64;
 
 @Service
 public class CreateUser implements ICreateUser {
@@ -20,14 +19,8 @@ public class CreateUser implements ICreateUser {
     @Override
     public User execute(final User user) {
         validateUserAlreadyExists(user);
-        final var userWithPasswordEncodeUpdate = getUserWithPasswordEncode(user);
-        final var userSave = userRepository.save(userWithPasswordEncodeUpdate);
+        final var userSave = userRepository.save(user);
         return userSave.cleanPassword();
-    }
-
-    private User getUserWithPasswordEncode(final User user) {
-        final var passwordEncode = Base64.getEncoder().encodeToString(user.password().getBytes());
-        return user.updatePassword(passwordEncode);
     }
 
     private void validateUserAlreadyExists(final User user) {
