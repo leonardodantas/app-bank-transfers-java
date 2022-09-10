@@ -1,6 +1,7 @@
 package com.bank.transfers.application.infra.http.controllers.advice;
 
 import com.bank.transfers.application.app.exceptions.AlreadyUserException;
+import com.bank.transfers.application.app.exceptions.BankAccountNotFoundException;
 import com.bank.transfers.application.infra.http.responses.ErrorResponse;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import javax.security.auth.login.AccountNotFoundException;
 
 @ControllerAdvice
 public class AdviceController {
@@ -25,7 +28,11 @@ public class AdviceController {
         return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
     }
 
-
+    @ExceptionHandler(BankAccountNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlerBankAccountNotFoundException(final BankAccountNotFoundException exception) {
+        final var response = ErrorResponse.from(exception.getMessage());
+        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handlerMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         final var fields = exception.getBindingResult().getFieldErrors();
