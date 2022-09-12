@@ -31,15 +31,14 @@ public class AddCashDeposit implements IAddCashDeposit {
     public CashDeposit execute(final BigDecimal value) {
         final var user = this.getUserToken.execute();
         final var account = this.getAccount(user);
-        final var cashDeposit = this.saveCashDeposit(user, account, value);
-        return this.cashDepositRepository.save(cashDeposit);
+        return this.saveCashDeposit(user, account, value);
     }
 
     private CashDeposit saveCashDeposit(final User user, final Account account, final BigDecimal value) {
         final var cashDeposit = CashDeposit.of(user, value, TransferType.USER_DEPOSIT);
         final var accountToSave = account.from(cashDeposit);
         this.accountRepository.save(accountToSave);
-        return cashDeposit;
+        return this.cashDepositRepository.save(cashDeposit);
     }
 
     private Account getAccount(final User user) {

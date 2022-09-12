@@ -35,6 +35,6 @@ public class AccountRepository implements IAccountRepository {
 
     @Override
     public Optional<Account> findByAccount(final String account) {
-        return accountSpringData.findByAccount(account);
+        return accountSpringData.findByAccount(account).map(AccountDocumentConverter::toDomain);
     }
 }

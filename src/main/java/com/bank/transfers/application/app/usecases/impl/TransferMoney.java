@@ -26,7 +26,7 @@ public class TransferMoney implements ITransferMoney {
 
     @Override
     public void execute(final Transfer transfer) {
-        final var destinationAccount = accountRepository.findByAccount(transfer.to())
+        final var destinationAccount = accountRepository.findByAccount(transfer.from())
                 .orElseThrow(() -> new BankAccountNotFoundException(String.format("Account %s not found", transfer.to())));
 
         final var destinationUser = userRepository.findById(destinationAccount.userId())
