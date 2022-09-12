@@ -58,7 +58,7 @@ public class BankTransferTest {
         when(getUserToken.execute()).thenReturn(user);
 
         final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500));
-        final var account = Account.of("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
+        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
 
         when(accountRepository.findByUserId(user.id()))
                 .thenReturn(Optional.of(account));
@@ -87,7 +87,7 @@ public class BankTransferTest {
 
         final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500));
         final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100));
-        final var account = Account.of("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit).withWithdrawal(cashWithdrawal);
+        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit).withWithdrawal(cashWithdrawal);
 
         when(accountRepository.findByUserId(user.id()))
                 .thenReturn(Optional.of(account));
@@ -113,7 +113,7 @@ public class BankTransferTest {
 
         final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500));
         final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100));
-        final var account = Account.of("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit).withWithdrawal(cashWithdrawal).withWithdrawal(cashWithdrawal);
+        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit).withWithdrawal(cashWithdrawal).withWithdrawal(cashWithdrawal);
 
         when(accountRepository.findByUserId(user.id()))
                 .thenReturn(Optional.of(account));
@@ -137,7 +137,7 @@ public class BankTransferTest {
         final var user = User.of("1", "Leonardo Dantas", "96357358000145", "user@email.com");
         when(getUserToken.execute()).thenReturn(user);
 
-        final var account = Account.of("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
+        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
 
         when(accountRepository.findByUserId(user.id()))
                 .thenReturn(Optional.of(account));
@@ -166,7 +166,7 @@ public class BankTransferTest {
         when(getUserToken.execute()).thenReturn(user);
 
         final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500));
-        final var account = Account.of("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
+        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
 
         when(accountRepository.findByUserId(user.id()))
                 .thenReturn(Optional.of(account));
@@ -182,7 +182,7 @@ public class BankTransferTest {
         when(getUserToken.execute()).thenReturn(user);
 
         final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500));
-        final var account = Account.of("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
+        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
 
         when(accountRepository.findByUserId(user.id()))
                 .thenReturn(Optional.of(account));

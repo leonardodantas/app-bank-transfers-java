@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface AccountSpringData extends MongoRepository<AccountDocument, String> {
     Optional<AccountDocument> findByUserId(final String userId);
+    Optional<Account> findByAccount(final String account);
 }

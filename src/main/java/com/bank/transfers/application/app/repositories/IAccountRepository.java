@@ -8,4 +8,7 @@ public interface IAccountRepository {
     Optional<Account> findByUserId(final String userId);
 
     Account save(final Account account);
+
+    Optional<Account> findByAccount(final String account);
+
 }

@@ -8,11 +8,11 @@ import com.bank.transfers.application.app.security.IGetUserToken;
 import com.bank.transfers.application.app.usecases.IAddCashDeposit;
 import com.bank.transfers.application.domains.Account;
 import com.bank.transfers.application.domains.CashDeposit;
+import com.bank.transfers.application.domains.TransferType;
 import com.bank.transfers.application.domains.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @Service
 public class AddCashDeposit implements IAddCashDeposit {
@@ -36,8 +36,8 @@ public class AddCashDeposit implements IAddCashDeposit {
     }
 
     private CashDeposit saveCashDeposit(final User user, final Account account, final BigDecimal value) {
-        final var cashDeposit = CashDeposit.of(user,value);
-        final var accountToSave = account.of(cashDeposit);
+        final var cashDeposit = CashDeposit.of(user, value, TransferType.USER_DEPOSIT);
+        final var accountToSave = account.from(cashDeposit);
         this.accountRepository.save(accountToSave);
         return cashDeposit;
     }

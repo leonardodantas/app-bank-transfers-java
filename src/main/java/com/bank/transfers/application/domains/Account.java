@@ -21,11 +21,11 @@ public record Account(
         LocalDateTime lastDeposit
 ) {
 
-    public static Account of(final String id, final String userId, final String account, final String number, final LocalDateTime openingDate, final LocalDateTime closingDate, final LocalDateTime fistDeposit, final LocalDateTime lastDeposit) {
+    public static Account from(final String id, final String userId, final String account, final String number, final LocalDateTime openingDate, final LocalDateTime closingDate, final LocalDateTime fistDeposit, final LocalDateTime lastDeposit) {
         return new Account(id, userId, account, number, openingDate, closingDate, true, BankTransactions.empty(), fistDeposit, lastDeposit);
     }
 
-    public static Account of(final User user) {
+    public static Account from(final User user) {
         final var accountNumberBase = String.valueOf(Instant.now().getNano());
         final var accountBase = accountNumberBase.substring(0, 6) + user.documentOnlyNumbers().substring(0, 2);
         final var number = user.documentOnlyNumbers().substring(user.documentOnlyNumbers().length() - 1);
@@ -33,7 +33,7 @@ public record Account(
                 number, LocalDateTime.now(), LocalDateTime.now().minusDays(1), true, BankTransactions.empty(), LocalDateTime.now().minusDays(1), LocalDateTime.now().minusDays(1));
     }
 
-    public Account of(final CashDeposit cashDeposit) {
+    public Account from(final CashDeposit cashDeposit) {
         final var cashDeposits = Stream.concat(this.bankTransactions().cashDeposits().stream(), Stream.of(cashDeposit)).toList();
         final var fistDeposit = getFistDeposit(cashDeposits);
         return new Account(this.id, this.userId, this.account, this.number, this.openingDate, this.closingDate, this.active, bankTransactions.of(cashDeposits), fistDeposit, LocalDateTime.now());

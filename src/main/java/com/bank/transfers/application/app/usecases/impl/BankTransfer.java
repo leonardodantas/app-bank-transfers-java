@@ -1,18 +1,14 @@
 package com.bank.transfers.application.app.usecases.impl;
 
-import com.bank.transfers.application.app.exceptions.BankAccountNotActiveException;
-import com.bank.transfers.application.app.exceptions.BankAccountNotFoundException;
-import com.bank.transfers.application.app.exceptions.LogisticsTransferException;
-import com.bank.transfers.application.app.exceptions.WithoutBalanceException;
-import com.bank.transfers.application.app.messages.ISendBankTransferMessage;
+import com.bank.transfers.application.app.exceptions.*;
 import com.bank.transfers.application.app.repositories.IAccountRepository;
-import com.bank.transfers.application.app.repositories.ITransferRepository;
+import com.bank.transfers.application.app.repositories.ICashDepositRepository;
+import com.bank.transfers.application.app.repositories.IUserRepository;
 import com.bank.transfers.application.app.security.IGetUserToken;
 import com.bank.transfers.application.app.usecases.IBankTransfer;
-import com.bank.transfers.application.domains.Account;
-import com.bank.transfers.application.domains.CashWithdrawal;
-import com.bank.transfers.application.domains.Transfer;
-import com.bank.transfers.application.domains.User;
+import com.bank.transfers.application.app.usecases.ISaveAndSendAccount;
+import com.bank.transfers.application.app.usecases.ITransferMoney;
+import com.bank.transfers.application.domains.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,14 +16,14 @@ public class BankTransfer implements IBankTransfer {
 
     private final IGetUserToken getUserToken;
     private final IAccountRepository accountRepository;
-    private final ITransferRepository bankTransferRepository;
-    private final ISendBankTransferMessage sendBankTransferMessage;
+    private final ISaveAndSendAccount saveAndSendAccount;
+    private final ITransferMoney transferMoney;
 
-    public BankTransfer(final IGetUserToken getUserToken, final IAccountRepository accountRepository, final ITransferRepository bankTransferRepository, final ISendBankTransferMessage sendBankTransferMessage) {
+    public BankTransfer(final IGetUserToken getUserToken, final IAccountRepository accountRepository, final ISaveAndSendAccount saveAndSendAccount, final ITransferMoney transferMoney) {
         this.getUserToken = getUserToken;
         this.accountRepository = accountRepository;
-        this.bankTransferRepository = bankTransferRepository;
-        this.sendBankTransferMessage = sendBankTransferMessage;
+        this.saveAndSendAccount = saveAndSendAccount;
+        this.transferMoney = transferMoney;
     }
 
     @Override
@@ -37,20 +33,15 @@ public class BankTransfer implements IBankTransfer {
         validateTransfer(user);
         validateBalance(transfer, account);
         final var cashWithdrawal = CashWithdrawal.of(user, transfer.value());
-        return saveAndSendMessage(transfer, account.withWithdrawal(cashWithdrawal));
-    }
-
-    private Transfer saveAndSendMessage(final Transfer transfer, final Account account) {
-        sendBankTransferMessage.execute(transfer);
-        this.accountRepository.save(account);
-        return bankTransferRepository.save(transfer.withAccount(account));
+        transferMoney.execute(transfer);
+        return saveAndSendAccount.execute(transfer, account.withWithdrawal(cashWithdrawal));
     }
 
     private Account getAccount(final User user) {
         final var account = accountRepository.findByUserId(user.id())
                 .orElseThrow(() -> new BankAccountNotFoundException(String.format("User %s don't have an account", user.nameComplete())));
 
-        if(account.active()) {
+        if (account.active()) {
             return account;
         }
 

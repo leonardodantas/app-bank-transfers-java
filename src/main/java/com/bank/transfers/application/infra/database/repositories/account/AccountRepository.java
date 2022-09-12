@@ -32,4 +32,9 @@ public class AccountRepository implements IAccountRepository {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public Optional<Account> findByAccount(final String account) {
+        return accountSpringData.findByAccount(account);
+    }
 }

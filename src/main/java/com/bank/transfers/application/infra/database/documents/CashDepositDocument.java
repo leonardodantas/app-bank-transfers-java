@@ -10,9 +10,10 @@ import java.time.LocalDateTime;
 public record CashDepositDocument(
         String userId,
         BigDecimal value,
+        TransferTypeDocument transferType,
         LocalDateTime create
 ) {
     public static CashDepositDocument from(final CashDeposit cashDeposit) {
-        return new CashDepositDocument(cashDeposit.userId(), cashDeposit.value(), cashDeposit.create());
+        return new CashDepositDocument(cashDeposit.userId(), cashDeposit.value(), TransferTypeDocument.valueOf(cashDeposit.transferType().name()), cashDeposit.create());
     }
 }

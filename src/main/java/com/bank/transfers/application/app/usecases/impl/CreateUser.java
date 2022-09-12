@@ -28,7 +28,7 @@ public class CreateUser implements ICreateUser {
     }
 
     private void saveAccount(final User userSave) {
-        final var account = Account.of(userSave);
+        final var account = Account.from(userSave);
         accountRepository.save(account);
     }
 
