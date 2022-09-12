@@ -52,6 +52,12 @@ public class AdviceController {
         return ResponseEntity.badRequest().body(response);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handlerRuntimeException(final RuntimeException exception) {
+        final var response = ErrorResponse.from(exception.getMessage());
+        return ResponseEntity.badRequest().body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Collection<ErrorResponse>> handlerMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         final var fields = exception.getBindingResult().getFieldErrors();

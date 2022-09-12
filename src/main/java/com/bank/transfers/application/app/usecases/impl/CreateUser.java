@@ -1,26 +1,35 @@
 package com.bank.transfers.application.app.usecases.impl;
 
 import com.bank.transfers.application.app.exceptions.AlreadyUserException;
+import com.bank.transfers.application.app.repositories.IAccountRepository;
 import com.bank.transfers.application.app.repositories.IUserRepository;
 import com.bank.transfers.application.app.usecases.ICreateUser;
+import com.bank.transfers.application.domains.Account;
 import com.bank.transfers.application.domains.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CreateUser implements ICreateUser {
 
     private final IUserRepository userRepository;
+    private final IAccountRepository accountRepository;
 
-    public CreateUser(final IUserRepository userRepository) {
+    public CreateUser(final IUserRepository userRepository, final IAccountRepository accountRepository) {
         this.userRepository = userRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Override
     public User execute(final User user) {
         validateUserAlreadyExists(user);
         final var userSave = userRepository.save(user);
+        saveAccount(userSave);
         return userSave.cleanPassword();
+    }
+
+    private void saveAccount(final User userSave) {
+        final var account = Account.of(userSave);
+        accountRepository.save(account);
     }
 
     private void validateUserAlreadyExists(final User user) {

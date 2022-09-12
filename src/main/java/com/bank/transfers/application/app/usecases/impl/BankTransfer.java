@@ -1,5 +1,7 @@
 package com.bank.transfers.application.app.usecases.impl;
 
+import com.bank.transfers.application.app.exceptions.BankAccountNotActiveException;
+import com.bank.transfers.application.app.exceptions.BankAccountNotFoundException;
 import com.bank.transfers.application.app.exceptions.LogisticsTransferException;
 import com.bank.transfers.application.app.exceptions.WithoutBalanceException;
 import com.bank.transfers.application.app.messages.ISendBankTransferMessage;
@@ -45,8 +47,14 @@ public class BankTransfer implements IBankTransfer {
     }
 
     private Account getAccount(final User user) {
-        return accountRepository.findByUserId(user.id())
-                .orElseGet(() -> null);
+        final var account = accountRepository.findByUserId(user.id())
+                .orElseThrow(() -> new BankAccountNotFoundException(String.format("User %s don't have an account", user.nameComplete())));
+
+        if(account.active()) {
+            return account;
+        }
+
+        throw new BankAccountNotActiveException(String.format("User %s don't have an active account", user.nameComplete()));
     }
 
     private void validateBalance(final Transfer transfer, final Account account) {
