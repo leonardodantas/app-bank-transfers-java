@@ -32,7 +32,7 @@ public class BankTransfer implements IBankTransfer {
         final var account = getAccount(user);
         validateTransfer(user);
         validateBalance(transfer, account);
-        final var cashWithdrawal = CashWithdrawal.of(user, transfer.value());
+        final var cashWithdrawal = CashWithdrawal.of(user, transfer.value(), WithdrawalType.TRANSFER_TO_ANOTHER_ACCOUNT);
         transferMoney.execute(transfer);
         return saveAndSendAccount.execute(transfer, account.withWithdrawal(cashWithdrawal));
     }
@@ -49,7 +49,7 @@ public class BankTransfer implements IBankTransfer {
     }
 
     private void validateBalance(final Transfer transfer, final Account account) {
-        if (account.amount().compareTo(transfer.value()) <= 0) {
+        if (account.amount().compareTo(transfer.value()) < 0) {
             throw new WithoutBalanceException("User without balance");
         }
     }

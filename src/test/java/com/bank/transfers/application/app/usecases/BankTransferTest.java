@@ -8,10 +8,7 @@ import com.bank.transfers.application.app.repositories.IAccountRepository;
 import com.bank.transfers.application.app.repositories.ITransferRepository;
 import com.bank.transfers.application.app.security.IGetUserToken;
 import com.bank.transfers.application.app.usecases.impl.BankTransfer;
-import com.bank.transfers.application.domains.Account;
-import com.bank.transfers.application.domains.CashDeposit;
-import com.bank.transfers.application.domains.CashWithdrawal;
-import com.bank.transfers.application.domains.User;
+import com.bank.transfers.application.domains.*;
 import com.bank.transfers.application.infra.http.converters.TransferConverter;
 import com.bank.transfers.application.infra.http.requests.TransferRequest;
 import org.junit.Test;
@@ -57,7 +54,7 @@ public class BankTransferTest {
         final var user = User.of("1", "Leonardo Dantas", "86779775037", "user@email.com");
         when(getUserToken.execute()).thenReturn(user);
 
-        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500));
+        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500), TransferType.USER_DEPOSIT);
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
 
         when(accountRepository.findByUserId(user.id()))
@@ -85,8 +82,8 @@ public class BankTransferTest {
         final var user = User.of("1", "Leonardo Dantas", "86779775037", "user@email.com");
         when(getUserToken.execute()).thenReturn(user);
 
-        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500));
-        final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100));
+        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500), TransferType.USER_DEPOSIT);
+        final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100), WithdrawalType.USER_WITHDRAWAL);
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit).withWithdrawal(cashWithdrawal);
 
         when(accountRepository.findByUserId(user.id()))
@@ -111,8 +108,8 @@ public class BankTransferTest {
         final var user = User.of("1", "Leonardo Dantas", "86779775037", "user@email.com");
         when(getUserToken.execute()).thenReturn(user);
 
-        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500));
-        final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100));
+        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500), TransferType.USER_DEPOSIT);
+        final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100), WithdrawalType.USER_WITHDRAWAL);
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit).withWithdrawal(cashWithdrawal).withWithdrawal(cashWithdrawal);
 
         when(accountRepository.findByUserId(user.id()))
@@ -165,7 +162,7 @@ public class BankTransferTest {
         final var user = User.of("1", "Leonardo Dantas", "86779775037", "user@email.com");
         when(getUserToken.execute()).thenReturn(user);
 
-        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500));
+        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500), TransferType.USER_DEPOSIT);
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
 
         when(accountRepository.findByUserId(user.id()))
@@ -181,7 +178,7 @@ public class BankTransferTest {
         final var user = User.of("1", "Leonardo Dantas", "86779775037", "user@email.com");
         when(getUserToken.execute()).thenReturn(user);
 
-        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500));
+        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500), TransferType.USER_DEPOSIT);
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
 
         when(accountRepository.findByUserId(user.id()))

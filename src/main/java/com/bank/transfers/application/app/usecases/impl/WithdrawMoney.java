@@ -8,6 +8,7 @@ import com.bank.transfers.application.app.usecases.IWithdrawMoney;
 import com.bank.transfers.application.domains.Account;
 import com.bank.transfers.application.domains.CashWithdrawal;
 import com.bank.transfers.application.domains.User;
+import com.bank.transfers.application.domains.WithdrawalType;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -35,7 +36,7 @@ public class WithdrawMoney implements IWithdrawMoney {
     }
 
     private CashWithdrawal saveAccountWithCashWithdrawal(final User user, final Account account, final BigDecimal value) {
-        final var cashWithdrawal = CashWithdrawal.of(user, value);
+        final var cashWithdrawal = CashWithdrawal.of(user, value, WithdrawalType.USER_WITHDRAWAL);
         final var accountUpdate = account.withWithdrawal(cashWithdrawal);
         accountRepository.save(accountUpdate);
         return cashWithdrawal;

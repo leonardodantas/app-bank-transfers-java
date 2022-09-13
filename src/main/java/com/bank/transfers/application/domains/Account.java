@@ -52,10 +52,6 @@ public record Account(
         return this.bankTransactions().cashDeposits().stream().map(CashDeposit::value).reduce(cashWithdrawalAmount, BigDecimal::add);
     }
 
-    public Collection<CashDeposit> cashDeposits() {
-        return this.bankTransactions().cashDeposits();
-    }
-
     public Account withDeposit(final CashDeposit cashDeposit) {
         return new Account(this.id, this.userId, this.account, this.number, this.openingDate, this.closingDate, this.active, BankTransactions.of(cashDeposit), fistDeposit, LocalDateTime.now());
     }
@@ -71,4 +67,12 @@ public record Account(
     public Account withWithdrawal(final CashWithdrawal cashWithdrawal) {
         return new Account(this.id, this.userId, this.account, this.number, this.openingDate, this.closingDate, this.active, this.bankTransactions.withWithdrawal(cashWithdrawal), fistDeposit, LocalDateTime.now());
     }
+
+    public Collection<CashDeposit> cashDeposits() {
+        return this.bankTransactions().cashDeposits();
+    }
+    public Collection<CashWithdrawal> cashWithdrawal() {
+        return this.bankTransactions().cashWithdrawal();
+    }
+
 }

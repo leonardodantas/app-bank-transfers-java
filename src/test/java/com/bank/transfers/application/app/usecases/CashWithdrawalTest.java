@@ -46,8 +46,8 @@ public class CashWithdrawalTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
-        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(600));
-        final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100));
+        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(600), TransferType.USER_DEPOSIT);
+        final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100), WithdrawalType.USER_WITHDRAWAL);
 
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withBankTransactions(BankTransactions.of(List.of(cashDeposit), List.of(cashWithdrawal)));
         when(accountRepository.findByUserId(any()))
@@ -73,8 +73,8 @@ public class CashWithdrawalTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
-        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(400));
-        final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(500));
+        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(400), TransferType.USER_DEPOSIT);
+        final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(500), WithdrawalType.USER_WITHDRAWAL);
 
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withBankTransactions(BankTransactions.of(List.of(cashDeposit), List.of(cashWithdrawal)));
         when(accountRepository.findByUserId(any()))

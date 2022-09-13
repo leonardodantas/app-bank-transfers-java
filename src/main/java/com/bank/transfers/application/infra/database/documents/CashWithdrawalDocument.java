@@ -8,9 +8,10 @@ import java.time.LocalDateTime;
 public record CashWithdrawalDocument(
         String userId,
         BigDecimal value,
+        WithdrawalTypeDocument type,
         LocalDateTime create
 ) {
     public static CashWithdrawalDocument from(final CashWithdrawal cashWithdrawal) {
-        return new CashWithdrawalDocument(cashWithdrawal.userId(), cashWithdrawal.value(), cashWithdrawal.create());
+        return new CashWithdrawalDocument(cashWithdrawal.userId(), cashWithdrawal.value(), WithdrawalTypeDocument.valueOf(cashWithdrawal.type().name()), cashWithdrawal.create());
     }
 }

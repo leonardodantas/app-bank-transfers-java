@@ -1,9 +1,6 @@
 package com.bank.transfers.application.infra.database.converters;
 
-import com.bank.transfers.application.domains.BankTransactions;
-import com.bank.transfers.application.domains.CashDeposit;
-import com.bank.transfers.application.domains.CashWithdrawal;
-import com.bank.transfers.application.domains.TransferType;
+import com.bank.transfers.application.domains.*;
 import com.bank.transfers.application.infra.database.documents.BankTransactionsDocument;
 import com.bank.transfers.application.infra.database.documents.CashDepositDocument;
 import com.bank.transfers.application.infra.database.documents.CashWithdrawalDocument;
@@ -20,8 +17,7 @@ public class BankTransactionsDocumentConverter {
         return new CashDeposit(document.userId(), document.value(), TransferType.valueOf(document.transferType().name()), document.create());
     }
 
-
     private static CashWithdrawal toDomain(final CashWithdrawalDocument document) {
-        return new CashWithdrawal(document.userId(), document.value(), document.create());
+        return new CashWithdrawal(document.userId(), document.value(), WithdrawalType.valueOf(document.type().name()), document.create());
     }
 }
