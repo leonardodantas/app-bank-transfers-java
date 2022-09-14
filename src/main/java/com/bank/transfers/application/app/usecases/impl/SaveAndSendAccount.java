@@ -33,7 +33,6 @@ public class SaveAndSendAccount implements ISaveAndSendAccount {
         return bankTransferRepository.save(transfer.withAccount(account));
     }
 
-
     private String getObjectAsJson(final Transfer transfer) {
         try {
             return objectMapper.writeValueAsString(transfer);

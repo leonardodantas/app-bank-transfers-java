@@ -23,11 +23,12 @@ public class AccountRepository implements IAccountRepository {
     }
 
     @Override
-    public Account save(final Account account) {
+    public Account save(final Account accountToSave) {
         try {
-            final var accountDocument = AccountDocument.from(account);
+            final var accountDocument = AccountDocument.from(accountToSave);
             final var accountSave = accountSpringData.save(accountDocument);
-            return AccountDocumentConverter.toDomain(accountSave);
+            final var account = AccountDocumentConverter.toDomain(accountSave);
+            return account;
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
