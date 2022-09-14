@@ -186,6 +186,6 @@ public class BankTransferTest {
 
         bankTransfer.execute(TransferConverter.toDomain(transfer));
 
-        verify(sendBankTransferMessage, times(1)).execute(any());
+        verify(sendBankTransferMessage, times(1)).execute(any(), anyString());
     }
 }

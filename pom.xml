@@ -42,11 +42,6 @@
             <version>3.0.0</version>
         </dependency>
         <dependency>
-            <groupId>org.pitest</groupId>
-            <artifactId>pitest-maven</artifactId>
-            <version>1.9.2</version>
-        </dependency>
-        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
@@ -71,7 +66,7 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjtools</artifactId>
-            <version>${aspectj.version}</version>
+            <version>1.9.9.1</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -85,19 +80,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>1.9.2</version>
-                <configuration>
-                    <targetClasses>
-                        <param>com.bank.transfers.application.app.usecases.*</param>
-                    </targetClasses>
-                    <targetTests>
-                        <param>com.bank.transfers.application.app.usecases.*</param>
-                    </targetTests>
-                </configuration>
             </plugin>
         </plugins>
     </build>
