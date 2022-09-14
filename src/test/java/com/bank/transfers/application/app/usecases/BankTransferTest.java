@@ -3,7 +3,7 @@ package com.bank.transfers.application.app.usecases;
 import com.bank.transfers.application.app.exceptions.BankAccountNotFoundException;
 import com.bank.transfers.application.app.exceptions.LogisticsTransferException;
 import com.bank.transfers.application.app.exceptions.WithoutBalanceException;
-import com.bank.transfers.application.app.messages.ISendBankTransferMessage;
+import com.bank.transfers.application.app.messages.ISendMessage;
 import com.bank.transfers.application.app.repositories.IAccountRepository;
 import com.bank.transfers.application.app.repositories.ITransferRepository;
 import com.bank.transfers.application.app.security.IGetUserToken;
@@ -42,7 +42,7 @@ public class BankTransferTest {
     private ITransferRepository bankTransferRepository;
 
     @Mock
-    private ISendBankTransferMessage sendBankTransferMessage;
+    private ISendMessage sendBankTransferMessage;
 
     @Captor
     private ArgumentCaptor<Account> accountArgumentCaptor;
