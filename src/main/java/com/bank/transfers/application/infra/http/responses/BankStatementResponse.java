@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 
 public record BankStatementResponse(
         BigDecimal value,
-        LocalDateTime time,
-        BankStatementTypeResponse type
+        BankStatementTypeResponse type,
+        LocalDateTime time
 ) {
     public static BankStatementResponse from(final BankStatement bankStatement) {
-        return new BankStatementResponse(bankStatement.value(), bankStatement.time(), BankStatementTypeResponse.valueOf(bankStatement.type().name()));
+        return new BankStatementResponse(bankStatement.value(), BankStatementTypeResponse.valueOf(bankStatement.type().name()), bankStatement.time());
     }
 }
