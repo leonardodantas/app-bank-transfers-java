@@ -73,6 +73,17 @@
             <artifactId>aspectjrt</artifactId>
             <version>1.9.9.1</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>12.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -83,5 +94,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -3,12 +3,14 @@ package com.bank.transfers.application.app.usecases;
 import com.bank.transfers.application.app.exceptions.BankAccountNotFoundException;
 import com.bank.transfers.application.app.exceptions.LogisticsTransferException;
 import com.bank.transfers.application.app.exceptions.WithoutBalanceException;
-import com.bank.transfers.application.app.messages.ISendMessage;
 import com.bank.transfers.application.app.repositories.IAccountRepository;
 import com.bank.transfers.application.app.repositories.ITransferRepository;
 import com.bank.transfers.application.app.security.IGetUserToken;
 import com.bank.transfers.application.app.usecases.impl.BankTransfer;
-import com.bank.transfers.application.domains.*;
+import com.bank.transfers.application.domains.Account;
+import com.bank.transfers.application.domains.CashDeposit;
+import com.bank.transfers.application.domains.TransferType;
+import com.bank.transfers.application.domains.User;
 import com.bank.transfers.application.infra.http.converters.TransferConverter;
 import com.bank.transfers.application.infra.http.requests.TransferRequest;
 import org.junit.Test;
@@ -31,19 +33,16 @@ public class BankTransferTest {
 
     @InjectMocks
     private BankTransfer bankTransfer;
-
     @Mock
     private IGetUserToken getUserToken;
-
     @Mock
     private IAccountRepository accountRepository;
-
     @Mock
     private ITransferRepository bankTransferRepository;
-
     @Mock
-    private ISendMessage sendBankTransferMessage;
-
+    private ITransferMoney transferMoney;
+    @Mock
+    private ISaveAndSendAccount saveAndSendAccount;
     @Captor
     private ArgumentCaptor<Account> accountArgumentCaptor;
 
@@ -61,70 +60,15 @@ public class BankTransferTest {
                 .thenReturn(Optional.of(account));
 
         final var transfer = TransferConverter.toDomain(transferRequest);
-        when(bankTransferRepository.save(any()))
-                .thenReturn(transfer.withAccount(account));
+
+        when(saveAndSendAccount.execute(any(), any()))
+                .thenReturn(transfer);
 
         final var transferDetails = bankTransfer.execute(transfer);
 
         assertThat(transferDetails).isNotNull();
-        assertThat(transferDetails.to()).isEqualTo(account.account());
         assertThat(transferDetails.from()).isEqualTo(transferRequest.from());
         assertThat(transferDetails.value()).isEqualTo(transferRequest.value());
-
-        verify(bankTransferRepository, times(1)).save(any());
-        verify(bankTransferRepository, times(1)).save(transfer.withAccount(account));
-    }
-
-    @Test
-    public void shouldTransferSuccessfullyWhenThereIsAlreadyAWithdrawal() {
-        final var transferRequest = new TransferRequest("12315", BigDecimal.valueOf(100));
-
-        final var user = User.of("1", "Leonardo Dantas", "86779775037", "user@email.com");
-        when(getUserToken.execute()).thenReturn(user);
-
-        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500), TransferType.USER_DEPOSIT);
-        final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100), WithdrawalType.USER_WITHDRAWAL);
-        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit).withWithdrawal(cashWithdrawal);
-
-        when(accountRepository.findByUserId(user.id()))
-                .thenReturn(Optional.of(account));
-
-        final var transfer = TransferConverter.toDomain(transferRequest);
-        when(bankTransferRepository.save(any()))
-                .thenReturn(transfer.withAccount(account));
-
-        bankTransfer.execute(transfer);
-
-        verify(accountRepository, times(1)).save(accountArgumentCaptor.capture());
-
-        final var result = accountArgumentCaptor.getValue();
-        assertThat(result.amount()).isEqualTo(BigDecimal.valueOf(300));
-    }
-
-    @Test
-    public void shouldTransferSuccessfullyWhenThereIsAlreadyMoreThanOneWithdrawal() {
-        final var transferRequest = new TransferRequest("12315", BigDecimal.valueOf(100));
-
-        final var user = User.of("1", "Leonardo Dantas", "86779775037", "user@email.com");
-        when(getUserToken.execute()).thenReturn(user);
-
-        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500), TransferType.USER_DEPOSIT);
-        final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100), WithdrawalType.USER_WITHDRAWAL);
-        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit).withWithdrawal(cashWithdrawal).withWithdrawal(cashWithdrawal);
-
-        when(accountRepository.findByUserId(user.id()))
-                .thenReturn(Optional.of(account));
-
-        final var transfer = TransferConverter.toDomain(transferRequest);
-        when(bankTransferRepository.save(any()))
-                .thenReturn(transfer.withAccount(account));
-
-        bankTransfer.execute(transfer);
-
-        verify(accountRepository, times(1)).save(accountArgumentCaptor.capture());
-
-        final var result = accountArgumentCaptor.getValue();
-        assertThat(result.amount()).isEqualTo(BigDecimal.valueOf(200));
     }
 
     @Test(expected = LogisticsTransferException.class)
@@ -186,6 +130,6 @@ public class BankTransferTest {
 
         bankTransfer.execute(TransferConverter.toDomain(transfer));
 
-        verify(sendBankTransferMessage, times(1)).execute(any(), anyString());
+        verify(saveAndSendAccount, times(1)).execute(any(), any());
     }
 }
