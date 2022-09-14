@@ -2,10 +2,8 @@ package com.bank.transfers.application.infra.http.controllers;
 
 import com.bank.transfers.application.app.usecases.IWithdrawMoney;
 import com.bank.transfers.application.infra.http.responses.CashWithdrawalResponse;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
@@ -20,6 +18,7 @@ public class WithdrawMoneyController {
     }
 
     @PostMapping("/{value}")
+    @ResponseStatus(HttpStatus.OK)
     public CashWithdrawalResponse execute(@PathVariable final BigDecimal value) {
         final var response = withdrawMoney.execute(value);
         return CashWithdrawalResponse.from(response);

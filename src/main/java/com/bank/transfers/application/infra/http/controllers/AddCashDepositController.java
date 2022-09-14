@@ -3,10 +3,8 @@ package com.bank.transfers.application.infra.http.controllers;
 import com.bank.transfers.application.app.usecases.IAddCashDeposit;
 import com.bank.transfers.application.domains.CashDeposit;
 import com.bank.transfers.application.infra.http.responses.CashDepositResponse;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
@@ -21,6 +19,7 @@ public class AddCashDepositController {
     }
 
     @PostMapping("/{value}")
+    @ResponseStatus(HttpStatus.OK)
     public CashDepositResponse execute(@PathVariable final BigDecimal value){
         final var response = addCashDeposit.execute(value);
         return CashDepositResponse.from(response);
