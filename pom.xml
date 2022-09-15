@@ -83,7 +83,15 @@
             <artifactId>guava</artifactId>
             <version>12.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -91,6 +99,19 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.9.2</version>
+                <configuration>
+                    <targetClasses>
+                        <param>com.bank.transfers.application.app.usecases.*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>com.bank.transfers.application.app.usecases.*</param>
+                    </targetTests>
+                </configuration>
             </plugin>
         </plugins>
     </build>
