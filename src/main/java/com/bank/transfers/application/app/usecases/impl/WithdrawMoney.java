@@ -1,9 +1,9 @@
 package com.bank.transfers.application.app.usecases.impl;
 
-import com.bank.transfers.application.app.exceptions.BankAccountNotFoundException;
 import com.bank.transfers.application.app.exceptions.WithoutBalanceException;
 import com.bank.transfers.application.app.repositories.IAccountRepository;
 import com.bank.transfers.application.app.security.IGetUserToken;
+import com.bank.transfers.application.app.usecases.IGetAccount;
 import com.bank.transfers.application.app.usecases.IWithdrawMoney;
 import com.bank.transfers.application.domains.Account;
 import com.bank.transfers.application.domains.CashWithdrawal;
@@ -18,20 +18,19 @@ public class WithdrawMoney implements IWithdrawMoney {
 
     private final IGetUserToken getUserToken;
     private final IAccountRepository accountRepository;
+    private final IGetAccount getAccount;
 
-    public WithdrawMoney(final IGetUserToken getUserToken, final IAccountRepository accountRepository) {
+    public WithdrawMoney(final IGetUserToken getUserToken, final IAccountRepository accountRepository, final IGetAccount getAccount) {
         this.getUserToken = getUserToken;
         this.accountRepository = accountRepository;
+        this.getAccount = getAccount;
     }
 
     @Override
     public CashWithdrawal execute(final BigDecimal value) {
         final var user = getUserToken.execute();
-        final var account = accountRepository.findByUserId(user.id())
-                .orElseThrow(() -> new BankAccountNotFoundException(String.format("User %s don't have a bank account", user.documentOnlyNumbers())));
-
+        final var account = getAccount.execute();
         validateBalance(user, account, value);
-
         return saveAccountWithCashWithdrawal(user, account, value);
     }
 

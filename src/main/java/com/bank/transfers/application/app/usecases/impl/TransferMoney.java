@@ -5,6 +5,7 @@ import com.bank.transfers.application.app.exceptions.UserNotFoundException;
 import com.bank.transfers.application.app.repositories.IAccountRepository;
 import com.bank.transfers.application.app.repositories.ICashDepositRepository;
 import com.bank.transfers.application.app.repositories.IUserRepository;
+import com.bank.transfers.application.app.usecases.IGetAccount;
 import com.bank.transfers.application.app.usecases.ITransferMoney;
 import com.bank.transfers.application.domains.CashDeposit;
 import com.bank.transfers.application.domains.Transfer;
@@ -17,17 +18,18 @@ public class TransferMoney implements ITransferMoney {
     private final IAccountRepository accountRepository;
     private final IUserRepository userRepository;
     private final ICashDepositRepository cashDepositRepository;
+    private final IGetAccount getAccount;
 
-    public TransferMoney(final IAccountRepository accountRepository, final IUserRepository userRepository, final ICashDepositRepository cashDepositRepository) {
+    public TransferMoney(final IAccountRepository accountRepository, final IUserRepository userRepository, final ICashDepositRepository cashDepositRepository, final IGetAccount getAccount) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.cashDepositRepository = cashDepositRepository;
+        this.getAccount = getAccount;
     }
 
     @Override
     public void execute(final Transfer transfer) {
-        final var destinationAccount = accountRepository.findByAccount(transfer.from())
-                .orElseThrow(() -> new BankAccountNotFoundException(String.format("Account %s not found", transfer.to())));
+        final var destinationAccount = getAccount.execute(transfer.from());
 
         final var destinationUser = userRepository.findById(destinationAccount.userId())
                 .orElseThrow(() -> new UserNotFoundException(String.format("User %s not found", destinationAccount.userId())));
