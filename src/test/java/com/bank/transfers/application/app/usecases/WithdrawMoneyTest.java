@@ -16,10 +16,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,6 +29,8 @@ public class WithdrawMoneyTest {
     private IGetUserToken getUserToken;
     @Mock
     private IAccountRepository accountRepository;
+    @Mock
+    private IGetAccount getAccount;
 
     @Test
     public void withdrawMoney() {
@@ -40,8 +40,8 @@ public class WithdrawMoneyTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
-        when(accountRepository.findByUserId(anyString()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         final var result = withdrawMoney.execute(BigDecimal.valueOf(1000));
         assertThat(result).isNotNull();
@@ -56,8 +56,8 @@ public class WithdrawMoneyTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
-        when(accountRepository.findByUserId(anyString()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         withdrawMoney.execute(BigDecimal.valueOf(100000));
     }

@@ -5,7 +5,6 @@ import com.bank.transfers.application.app.repositories.IAccountRepository;
 import com.bank.transfers.application.app.repositories.IUserRepository;
 import com.bank.transfers.application.app.usecases.impl.CreateUser;
 import com.bank.transfers.application.domains.Account;
-import com.bank.transfers.application.domains.User;
 import com.bank.transfers.application.infra.http.converters.UserConverter;
 import com.bank.transfers.application.infra.http.requests.UserRequest;
 import org.junit.Test;
@@ -33,9 +32,6 @@ public class CreateUserTest {
 
     @Mock
     private IAccountRepository accountRepository;
-
-    @Captor
-    private ArgumentCaptor<User> userArgument;
 
     @Captor
     private ArgumentCaptor<Account> accountArgument;

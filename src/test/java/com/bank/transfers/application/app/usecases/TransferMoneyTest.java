@@ -1,6 +1,5 @@
 package com.bank.transfers.application.app.usecases;
 
-import com.bank.transfers.application.app.exceptions.BankAccountNotFoundException;
 import com.bank.transfers.application.app.exceptions.UserNotFoundException;
 import com.bank.transfers.application.app.repositories.IAccountRepository;
 import com.bank.transfers.application.app.repositories.ICashDepositRepository;
@@ -34,6 +33,8 @@ public class TransferMoneyTest {
     private IUserRepository userRepository;
     @Mock
     private ICashDepositRepository cashDepositRepository;
+    @Mock
+    private IGetAccount getAccount;
     @Captor
     private ArgumentCaptor<Account> accountArgumentCaptor;
     @Captor
@@ -41,14 +42,18 @@ public class TransferMoneyTest {
 
     @Test
     public void testExecute() {
-        final var user = User.of("1", "Leonardo Dantas", "12356547987", "user@mail.com");
-        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(CashDeposit.of(user, BigDecimal.valueOf(10000), TransferType.USER_DEPOSIT));
+        final var userFrom = User.of("2", "Leonardo Rodrigues", "45687129750", "user@mail.com");
+        final var accountFrom = Account.from("2", "2", "582159", "9", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(CashDeposit.of(userFrom, BigDecimal.valueOf(10000), TransferType.USER_DEPOSIT));
+        when(getAccount.execute())
+                .thenReturn(accountFrom);
 
-        when(accountRepository.findByAccount(anyString()))
-                .thenReturn(Optional.of(account));
+        final var userTo = User.of("1", "Leonardo Dantas", "12356547987", "user@mail.com");
+        final var accountTo = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(CashDeposit.of(userTo, BigDecimal.valueOf(10000), TransferType.USER_DEPOSIT));
+        when(getAccount.execute(anyString()))
+                .thenReturn(accountTo);
 
         when(userRepository.findById(anyString()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(userTo));
 
         final var transfer = Transfer.of("4412765", BigDecimal.valueOf(1000));
         transferMoney.execute(transfer);
@@ -63,19 +68,17 @@ public class TransferMoneyTest {
         assertThat(cashDepositCaptor).isNotNull();
     }
 
-    @Test(expected = BankAccountNotFoundException.class)
-    public void shouldThrowBankAccountNotFoundException() {
-        final var transfer = Transfer.of("4412765", BigDecimal.valueOf(1000));
-        transferMoney.execute(transfer);
-    }
-
     @Test(expected = UserNotFoundException.class)
     public void shouldThrowUserNotFoundException() {
-        final var user = User.of("1", "Leonardo Dantas", "12356547987", "user@mail.com");
-        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(CashDeposit.of(user, BigDecimal.valueOf(10000), TransferType.USER_DEPOSIT));
+        final var userFrom = User.of("2", "Leonardo Rodrigues", "45687129750", "user@mail.com");
+        final var accountFrom = Account.from("2", "2", "582159", "9", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(CashDeposit.of(userFrom, BigDecimal.valueOf(10000), TransferType.USER_DEPOSIT));
+        when(getAccount.execute())
+                .thenReturn(accountFrom);
 
-        when(accountRepository.findByAccount(anyString()))
-                .thenReturn(Optional.of(account));
+        final var userTo = User.of("1", "Leonardo Dantas", "12356547987", "user@mail.com");
+        final var accountTo = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(CashDeposit.of(userTo, BigDecimal.valueOf(10000), TransferType.USER_DEPOSIT));
+        when(getAccount.execute(anyString()))
+                .thenReturn(accountTo);
 
         when(userRepository.findById(anyString()))
                 .thenReturn(Optional.empty());

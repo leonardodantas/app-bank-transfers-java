@@ -11,8 +11,8 @@ public record Transfer(
         BigDecimal value,
         LocalDateTime date
 ) {
-    public static Transfer of(final String from, final BigDecimal value) {
-        return new Transfer(UUID.randomUUID().toString(), "", from, value, LocalDateTime.now());
+    public static Transfer of(final String to, final BigDecimal value) {
+        return new Transfer(UUID.randomUUID().toString(), to, "", value, LocalDateTime.now());
     }
 
     public Transfer withAccount(final Account account) {

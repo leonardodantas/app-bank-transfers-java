@@ -1,6 +1,5 @@
 package com.bank.transfers.application.app.usecases.impl;
 
-import com.bank.transfers.application.app.exceptions.BankAccountNotFoundException;
 import com.bank.transfers.application.app.exceptions.UserNotFoundException;
 import com.bank.transfers.application.app.repositories.IAccountRepository;
 import com.bank.transfers.application.app.repositories.ICashDepositRepository;
@@ -29,8 +28,9 @@ public class TransferMoney implements ITransferMoney {
 
     @Override
     public void execute(final Transfer transfer) {
-        final var destinationAccount = getAccount.execute(transfer.from());
+        getAccount.execute();
 
+        final var destinationAccount = getAccount.execute(transfer.to());
         final var destinationUser = userRepository.findById(destinationAccount.userId())
                 .orElseThrow(() -> new UserNotFoundException(String.format("User %s not found", destinationAccount.userId())));
 

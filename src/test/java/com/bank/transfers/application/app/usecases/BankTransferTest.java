@@ -1,11 +1,7 @@
 package com.bank.transfers.application.app.usecases;
 
-import com.bank.transfers.application.app.exceptions.BankAccountNotActiveException;
-import com.bank.transfers.application.app.exceptions.BankAccountNotFoundException;
 import com.bank.transfers.application.app.exceptions.LogisticsTransferException;
 import com.bank.transfers.application.app.exceptions.WithoutBalanceException;
-import com.bank.transfers.application.app.repositories.IAccountRepository;
-import com.bank.transfers.application.app.repositories.ITransferRepository;
 import com.bank.transfers.application.app.security.IGetUserToken;
 import com.bank.transfers.application.app.usecases.impl.BankTransfer;
 import com.bank.transfers.application.domains.*;
@@ -21,7 +17,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -34,13 +29,11 @@ public class BankTransferTest {
     @Mock
     private IGetUserToken getUserToken;
     @Mock
-    private IAccountRepository accountRepository;
-    @Mock
-    private ITransferRepository bankTransferRepository;
-    @Mock
     private ITransferMoney transferMoney;
     @Mock
     private ISaveAndSendAccount saveAndSendAccount;
+    @Mock
+    private IGetAccount getAccount;
     @Captor
     private ArgumentCaptor<Transfer> transferArgumentCaptor;
 
@@ -53,9 +46,8 @@ public class BankTransferTest {
 
         final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500), TransferType.USER_DEPOSIT);
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
-
-        when(accountRepository.findByUserId(user.id()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         final var transfer = TransferConverter.toDomain(transferRequest);
 
@@ -65,7 +57,6 @@ public class BankTransferTest {
         final var transferDetails = bankTransfer.execute(transfer);
 
         assertThat(transferDetails).isNotNull();
-        assertThat(transferDetails.from()).isEqualTo(transferRequest.from());
         assertThat(transferDetails.value()).isEqualTo(transferRequest.value());
 
         verify(transferMoney, times(1)).execute(transferArgumentCaptor.capture());
@@ -81,38 +72,8 @@ public class BankTransferTest {
         when(getUserToken.execute()).thenReturn(user);
 
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
-
-        when(accountRepository.findByUserId(user.id()))
-                .thenReturn(Optional.of(account));
-
-        bankTransfer.execute(TransferConverter.toDomain(transfer));
-    }
-
-    @Test(expected = BankAccountNotFoundException.class)
-    public void shouldThrowBankAccountNotFoundException() {
-        final var transfer = new TransferRequest("12315", BigDecimal.valueOf(100));
-
-        final var user = User.of("1", "Leonardo Dantas", "96357358000145", "user@email.com");
-        when(getUserToken.execute()).thenReturn(user);
-
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.empty());
-
-        bankTransfer.execute(TransferConverter.toDomain(transfer));
-    }
-
-    @Test(expected = BankAccountNotActiveException.class)
-    public void shouldThrowBankAccountNotActiveExceptionWhenAccountDisable() {
-        final var transfer = new TransferRequest("12315", BigDecimal.valueOf(100));
-
-        final var user = User.of("1", "Leonardo Dantas", "96357358000145", "user@email.com");
-        when(getUserToken.execute()).thenReturn(user);
-
-        final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500), TransferType.USER_DEPOSIT);
-        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
-
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.of(account.disable()));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         bankTransfer.execute(TransferConverter.toDomain(transfer));
     }
@@ -127,8 +88,8 @@ public class BankTransferTest {
         final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500), TransferType.USER_DEPOSIT);
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
 
-        when(accountRepository.findByUserId(user.id()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         bankTransfer.execute(TransferConverter.toDomain(transfer));
     }
@@ -143,8 +104,8 @@ public class BankTransferTest {
         final var cashDeposit = CashDeposit.of(user, BigDecimal.valueOf(500), TransferType.USER_DEPOSIT);
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDeposit);
 
-        when(accountRepository.findByUserId(user.id()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         bankTransfer.execute(TransferConverter.toDomain(transfer));
 

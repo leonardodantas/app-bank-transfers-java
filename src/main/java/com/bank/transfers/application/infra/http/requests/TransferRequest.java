@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public record TransferRequest(
         @NotBlank
-        String from,
+        String to,
         @Positive
         BigDecimal value
 ) {

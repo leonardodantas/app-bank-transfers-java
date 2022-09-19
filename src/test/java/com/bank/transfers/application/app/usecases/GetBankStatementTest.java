@@ -1,8 +1,5 @@
 package com.bank.transfers.application.app.usecases;
 
-import com.bank.transfers.application.app.exceptions.BankAccountNotFoundException;
-import com.bank.transfers.application.app.repositories.IAccountRepository;
-import com.bank.transfers.application.app.security.IGetUserToken;
 import com.bank.transfers.application.app.usecases.impl.GetBankStatement;
 import com.bank.transfers.application.domains.*;
 import org.junit.Test;
@@ -14,10 +11,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -26,9 +21,7 @@ public class GetBankStatementTest {
     @InjectMocks
     private GetBankStatement getBankStatement;
     @Mock
-    private IGetUserToken getUserToken;
-    @Mock
-    private IAccountRepository accountRepository;
+    private IGetAccount getAccount;
 
     @Test
     public void getBankStatement() {
@@ -49,11 +42,8 @@ public class GetBankStatementTest {
 
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withBankTransactions(BankTransactions.of(cashDeposits, cashWithdrawals));
 
-        when(getUserToken.execute())
-                .thenReturn(user);
-
-        when(accountRepository.findByUserId(anyString()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         final var result = getBankStatement.execute();
 
@@ -61,16 +51,4 @@ public class GetBankStatementTest {
         assertThat(result.size()).isEqualTo(7);
     }
 
-    @Test(expected = BankAccountNotFoundException.class)
-    public void testThrowBankAccountNotFoundException() {
-        final var user = User.of("1", "Leonardo Dantas", "12356547987", "user@mail.com");
-
-        when(getUserToken.execute())
-                .thenReturn(user);
-
-        when(accountRepository.findByUserId(anyString()))
-                .thenReturn(Optional.empty());
-
-        getBankStatement.execute();
-    }
 }

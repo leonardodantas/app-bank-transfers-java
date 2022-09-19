@@ -39,8 +39,7 @@ public class GenerateToken implements IGenerateToken {
         return getToken(authentication);
     }
 
-
-    public Token getToken(final Authentication authentication) {
+    private Token getToken(final Authentication authentication) {
         final var logged = (AuthenticatedUser) authentication.getPrincipal();
         final var createAt = new Date();
         final var expirationAt = new Date(createAt.getTime() + Long.parseLong(expiration));

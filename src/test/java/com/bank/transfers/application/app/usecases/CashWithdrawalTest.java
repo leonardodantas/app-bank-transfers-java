@@ -16,10 +16,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,6 +31,9 @@ public class CashWithdrawalTest {
 
     @Mock
     private IAccountRepository accountRepository;
+
+    @Mock
+    private IGetAccount getAccount;
 
     @Captor
     private ArgumentCaptor<Account> accountArgumentCaptor;
@@ -50,8 +51,8 @@ public class CashWithdrawalTest {
         final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100), WithdrawalType.USER_WITHDRAWAL);
 
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withBankTransactions(BankTransactions.of(List.of(cashDeposit), List.of(cashWithdrawal)));
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         final var result = withdrawMoney.execute(value);
 
@@ -77,8 +78,8 @@ public class CashWithdrawalTest {
         final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(500), WithdrawalType.USER_WITHDRAWAL);
 
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withBankTransactions(BankTransactions.of(List.of(cashDeposit), List.of(cashWithdrawal)));
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         withdrawMoney.execute(value);
     }

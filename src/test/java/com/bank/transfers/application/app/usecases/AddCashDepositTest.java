@@ -1,7 +1,5 @@
 package com.bank.transfers.application.app.usecases;
 
-import com.bank.transfers.application.app.exceptions.BankAccountNotActiveException;
-import com.bank.transfers.application.app.exceptions.BankAccountNotFoundException;
 import com.bank.transfers.application.app.repositories.IAccountRepository;
 import com.bank.transfers.application.app.repositories.ICashDepositRepository;
 import com.bank.transfers.application.app.security.IGetUserToken;
@@ -18,7 +16,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,6 +36,9 @@ public class AddCashDepositTest {
     @Mock
     private IAccountRepository accountRepository;
 
+    @Mock
+    private IGetAccount getAccount;
+
     @Captor
     private ArgumentCaptor<Account> accountArgumentCaptor;
 
@@ -51,14 +51,14 @@ public class AddCashDepositTest {
         when(getUserToken.execute())
                 .thenReturn(user);
 
+        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
+        when(getAccount.execute())
+                .thenReturn(account);
+
         final var cashDepositSave = CashDeposit.of(user, value, TransferType.USER_DEPOSIT);
 
         when(cashDepositRepository.save(any()))
                 .thenReturn(cashDepositSave);
-
-        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.of(account));
 
         final var cashDeposit = addCashDeposit.execute(value);
 
@@ -82,14 +82,14 @@ public class AddCashDepositTest {
                 .thenReturn(cashDepositSave);
 
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0));
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         final var cashDeposit = addCashDeposit.execute(value);
 
         assertThat(cashDeposit).isNotNull();
 
-        verify(accountRepository, times(1)).findByUserId(user.id());
+        verify(getAccount, times(1)).execute();
         verify(accountRepository, times(1)).save(accountArgumentCaptor.capture());
 
         final var result = accountArgumentCaptor.getValue();
@@ -114,8 +114,8 @@ public class AddCashDepositTest {
                 .thenReturn(cashDepositSave);
 
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDepositSave);
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         final var cashDeposit = addCashDeposit.execute(value);
 
@@ -127,39 +127,6 @@ public class AddCashDepositTest {
         assertThat(result.fistDeposit()).isEqualTo(LocalDateTime.of(2021, 10, 5, 10, 30, 0));
         assertThat(result.lastDeposit()).isAfter(LocalDateTime.of(2021, 10, 5, 10, 30, 0));
         assertThat(result.cashDeposits().size()).isEqualTo(2);
-    }
-
-    @Test(expected = BankAccountNotActiveException.class)
-    public void shouldThrowBankAccountNotActiveException() {
-        final var value = BigDecimal.valueOf(100);
-
-        final var user = getUser();
-
-        when(getUserToken.execute())
-                .thenReturn(user);
-
-        final var cashDepositSave = CashDeposit.of(user, value, TransferType.USER_DEPOSIT);
-
-        final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDepositSave);
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.of(account.disable()));
-
-        addCashDeposit.execute(value);
-    }
-
-    @Test(expected = BankAccountNotFoundException.class)
-    public void shouldThrowBankAccountNotFoundException() {
-        final var value = BigDecimal.valueOf(100);
-
-        final var user = getUser();
-
-        when(getUserToken.execute())
-                .thenReturn(user);
-
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.empty());
-
-        addCashDeposit.execute(value);
     }
 
     @Test
@@ -177,8 +144,8 @@ public class AddCashDepositTest {
                 .thenReturn(cashDepositSave);
 
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withDeposit(cashDepositSave);
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         final var cashDeposit = addCashDeposit.execute(value);
 
@@ -207,8 +174,8 @@ public class AddCashDepositTest {
         final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(50), WithdrawalType.USER_WITHDRAWAL);
 
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withBankTransactions(BankTransactions.of(cashDepositSave, cashWithdrawal));
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         final var cashDeposit = addCashDeposit.execute(value);
 
@@ -237,8 +204,8 @@ public class AddCashDepositTest {
         final var cashWithdrawal = CashWithdrawal.of(user, BigDecimal.valueOf(100), WithdrawalType.USER_WITHDRAWAL);
 
         final var account = Account.from("1", "1", "456123", "8", LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 3, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0), LocalDateTime.of(2021, 10, 5, 10, 30, 0)).withBankTransactions(BankTransactions.of(List.of(cashDepositSave), List.of(cashWithdrawal)));
-        when(accountRepository.findByUserId(any()))
-                .thenReturn(Optional.of(account));
+        when(getAccount.execute())
+                .thenReturn(account);
 
         final var cashDeposit = addCashDeposit.execute(value);
 

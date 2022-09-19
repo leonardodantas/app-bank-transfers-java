@@ -60,6 +60,10 @@ public record Account(
         return new Account(this.id, this.userId, this.account, this.number, this.openingDate, this.closingDate, false, this.bankTransactions, fistDeposit, LocalDateTime.now());
     }
 
+    public Account enable() {
+        return new Account(this.id, this.userId, this.account, this.number, this.openingDate, this.closingDate, true, this.bankTransactions, fistDeposit, LocalDateTime.now());
+    }
+
     public Account withBankTransactions(final BankTransactions bankTransactions) {
         return new Account(this.id, this.userId, this.account, this.number, this.openingDate, this.closingDate, this.active, bankTransactions, fistDeposit, LocalDateTime.now());
     }
