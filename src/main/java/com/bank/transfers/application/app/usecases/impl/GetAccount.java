@@ -41,7 +41,7 @@ public class GetAccount implements IGetAccount {
     }
 
     private void validateAccountIsActive(final Account account) {
-        if (account.active()) {
+        if (!account.active()) {
             throw new BankAccountNotActiveException(String.format("Account %s disable", account.account()));
         }
     }
