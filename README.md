@@ -56,7 +56,7 @@ http://localhost:8080/swagger-ui/
 
 ## Apêndice
 
-O projeto foi construido a partir do seguinte desafio [Desafio backend](https://github.com/goomerdev/job-dev-backend-interview) encontrado no repositório https://github.com/CollabCodeTech/backend-challenges
+O projeto foi construido a partir do seguinte desafio [Desafio backend](https://github.com/PicPay/picpay-desafio-backend) encontrado no repositório https://github.com/CollabCodeTech/backend-challenges
 
 
 ### :sunglasses: Autor
