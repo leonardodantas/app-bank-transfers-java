@@ -42,9 +42,6 @@ http://localhost:8080/swagger-ui/
 - Arquitetura baseada em Clean Arch
 - Criação de Annotations para validação de dados
 
-## Documentação da API
-
-
 ## Tecnologias
 
 <div style="display: inline_block">
